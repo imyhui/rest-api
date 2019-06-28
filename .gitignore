@@ -1,3 +1,4 @@
 rest-api
 .DS_Store
 .idea/
+/log/

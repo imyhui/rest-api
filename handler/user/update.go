@@ -5,45 +5,45 @@ import (
 	"rest-api/model"
 	"rest-api/pkg/errno"
 	"rest-api/util"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lexkong/log"
 	"github.com/lexkong/log/lager"
 )
 
-// Create creates a new user account.
-func Create(c *gin.Context) {
-	log.Info("User Create function called.", lager.Data{"X-Request-Id": util.GetReqID(c)})
-	var r CreateRequest
-	if err := c.Bind(&r); err != nil {
+// Update update a exist user account info.
+func Update(c *gin.Context) {
+	log.Info("Update function called.", lager.Data{"X-Request-Id": util.GetReqID(c)})
+	// Get the user id from the url parameter.
+	userId, _ := strconv.Atoi(c.Param("id"))
+
+	var u model.UserModel
+	// Binding the user data.
+	if err := c.Bind(&u); err != nil {
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
+	// We update the record based on the user id.
+	u.Id = uint64(userId)
 
-	u := model.UserModel{
-		Username: r.Username,
-		Password: r.Password,
-	}
 	// Validate the data.
 	if err := u.Validate(); err != nil {
 		SendResponse(c, errno.ErrValidation, nil)
 		return
 	}
+
 	// Encrypt the user password.
 	if err := u.Encrypt(); err != nil {
 		SendResponse(c, errno.ErrEncrypt, nil)
 		return
 	}
-	// Insert the user to the database.
-	if err := u.Create(); err != nil {
+
+	// Save changed fields.
+	if err := u.Update(); err != nil {
 		SendResponse(c, errno.ErrDatabase, nil)
 		return
 	}
 
-	rsp := CreateResponse{
-		Username: r.Username,
-	}
-
-	// Show the user information.
-	SendResponse(c, nil, rsp)
+	SendResponse(c, nil, nil)
 }

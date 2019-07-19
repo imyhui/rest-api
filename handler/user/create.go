@@ -1,39 +1,43 @@
 package user
 
 import (
-	"fmt"
-	"rest-api/handler"
+	. "rest-api/handler"
+	"rest-api/model"
 	"rest-api/pkg/errno"
+	"rest-api/util"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lexkong/log"
+	"github.com/lexkong/log/lager"
 )
 
 // Create creates a new user account.
 func Create(c *gin.Context) {
+	log.Infof("User Create function called.", lager.Data{"X-Request-Id": util.GetReqID(c)})
 	var r CreateRequest
 	if err := c.Bind(&r); err != nil {
-		handler.SendResponse(c, errno.ErrBind, nil)
+		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
 
-	admin2 := c.Param("username")
-	log.Infof("URL username: %s", admin2)
-
-	desc := c.Query("desc")
-	log.Infof("URL key param desc: %s", desc)
-
-	contentType := c.GetHeader("Content-Type")
-	log.Infof("URL key param desc: %s", contentType)
-
-	log.Debugf("username is: [%s]", r.Username, r.Password)
-	if r.Username == "" {
-		handler.SendResponse(c, errno.New(errno.ErrUserNotFound, fmt.Errorf("username can not found in db: xx.xx.xx.xx")), nil)
+	u := model.UserModel{
+		Username: r.Username,
+		Password: r.Password,
+	}
+	// Validate the data.
+	if err := u.Validate(); err != nil {
+		SendResponse(c, errno.ErrValidation, nil)
 		return
 	}
-
-	if r.Password == "" {
-		handler.SendResponse(c, fmt.Errorf("password is empty"), nil)
+	// Encrypt the user password.
+	if err := u.Encrypt(); err != nil {
+		SendResponse(c, errno.ErrEncrypt, nil)
+		return
+	}
+	// Insert the user to the database.
+	if err := u.Create(); err != nil {
+		SendResponse(c, errno.ErrDatabase, nil)
+		return
 	}
 
 	rsp := CreateResponse{
@@ -41,5 +45,5 @@ func Create(c *gin.Context) {
 	}
 
 	// Show the user information.
-	handler.SendResponse(c, nil, rsp)
+	SendResponse(c, nil, rsp)
 }

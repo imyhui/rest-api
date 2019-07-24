@@ -1,11 +1,12 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"rest-api/handler/sd"
 	"rest-api/handler/user"
 	"rest-api/router/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Load loads the middleeares, routes, handlers

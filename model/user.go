@@ -3,16 +3,17 @@ package model
 import (
 	"fmt"
 
-	"gopkg.in/go-playground/validator.v9"
 	"rest-api/pkg/auth"
 	"rest-api/pkg/constvar"
+
+	"gopkg.in/go-playground/validator.v9"
 )
 
 //UserModel represents a registered user.
 type UserModel struct {
 	BaseModel
-	Username string `json:"username" gorm:"column:username;not null" binding:"require" validate:"min=1,max=32"`
-	Password string `json:"password" gorm:"column:password;not null" binding:"require" validate:"min=5,max=128"`
+	Username string `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
+	Password string `json:"password" gorm:"column:password;not null" binding:"required" validate:"min=5,max=128"`
 }
 
 // TableName return tb name
@@ -53,7 +54,7 @@ func ListUser(username string, offset, limit int) ([]*UserModel, uint64, error) 
 	users := make([]*UserModel, 0)
 	var count uint64
 
-	where := fmt.Sprintf("username like %%%s%%", username)
+	where := fmt.Sprintf("username like '%%%s%%'", username)
 	if err := DB.Self.Model(&UserModel{}).Where(where).Count(&count).Error; err != nil {
 		return users, count, err
 	}

@@ -17,9 +17,13 @@ db:
   name: db_apiserver
   addr: 127.0.0.1:3306
   username: root
-  password: 
+  password: 123456
 docker_db:
   name: db_apiserver
   addr: 127.0.0.1:3306
   username: root
-  password:  
+  password:
+tls:
+  addr: :8081
+  cert: conf/server.crt
+  key: conf/server.key

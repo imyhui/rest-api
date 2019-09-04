@@ -11,7 +11,7 @@ import (
 // List list the users in the database.
 func List(c *gin.Context) {
 	var r ListRequest
-	if err := c.ShouldBindJSON(&r); err != nil {
+	if err := c.Bind(&r); err != nil {
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}

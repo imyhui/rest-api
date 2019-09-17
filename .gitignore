@@ -1,4 +1,11 @@
+# Binaries for programs and plugins
 rest-api
 .DS_Store
 .idea/
 /log/
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out

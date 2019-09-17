@@ -13,21 +13,13 @@
                 "summary": "Login generates the authentication token",
                 "parameters": [
                     {
-                        "description": "Username",
-                        "name": "username",
+                        "description": "login",
+                        "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Password",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "$ref": "#/definitions/model.UserModel"
                         }
                     }
                 ],
@@ -41,7 +33,99 @@
                 }
             }
         },
-        "/user": {
+        "/sd/cpu": {
+            "get": {
+                "description": "Checks the cpu usage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sd"
+                ],
+                "summary": "Checks the cpu usage",
+                "responses": {
+                    "200": {
+                        "description": "CRITICAL - Load average: 1.78, 1.99, 2.02 | Cores: 2",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sd/disk": {
+            "get": {
+                "description": "Checks the disk usage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sd"
+                ],
+                "summary": "Checks the disk usage",
+                "responses": {
+                    "200": {
+                        "description": "OK - Free space: 17233MB (16GB) / 51200MB (50GB) | Used: 33%",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sd/health": {
+            "get": {
+                "description": "Shows OK as the ping-pong result",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sd"
+                ],
+                "summary": "Shows OK as the ping-pong result",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sd/ram": {
+            "get": {
+                "description": "Checks the ram usage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sd"
+                ],
+                "summary": "Checks the ram usage",
+                "responses": {
+                    "200": {
+                        "description": "OK - Free space: 402MB (0GB) / 8192MB (8GB) | Used: 4%",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user": {
             "get": {
                 "description": "List users",
                 "consumes": [
@@ -55,6 +139,13 @@
                 ],
                 "summary": "List the users in the database",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "List users",
                         "name": "user",
@@ -89,6 +180,13 @@
                 "summary": "Add new user to the database",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Create a new user",
                         "name": "user",
                         "in": "body",
@@ -109,7 +207,7 @@
                 }
             }
         },
-        "/user/{id}": {
+        "/v1/user/{id}": {
             "put": {
                 "description": "Update a user by ID",
                 "consumes": [
@@ -123,6 +221,13 @@
                 ],
                 "summary": "Update a user info by the user identifier",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "The user's database id index num",
@@ -164,6 +269,13 @@
                 "summary": "Delete an user by the user identifier",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "description": "The user's database id index num",
                         "name": "id",
@@ -181,7 +293,7 @@
                 }
             }
         },
-        "/user/{username}": {
+        "/v1/user/{username}": {
             "get": {
                 "description": "Get an user by username",
                 "consumes": [
@@ -195,6 +307,13 @@
                 ],
                 "summary": "Get an user by the user identifier",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Username",

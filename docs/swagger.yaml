@@ -75,18 +75,13 @@ paths:
   /login:
     post:
       parameters:
-      - description: Username
+      - description: login
         in: body
-        name: username
+        name: user
         required: true
         schema:
-          type: string
-      - description: Password
-        in: body
-        name: password
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/model.UserModel'
+          type: object
       produces:
       - application/json
       responses:
@@ -95,12 +90,77 @@ paths:
           schema:
             type: string
       summary: Login generates the authentication token
-  /user:
+  /sd/cpu:
+    get:
+      consumes:
+      - application/json
+      description: Checks the cpu usage
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'CRITICAL - Load average: 1.78, 1.99, 2.02 | Cores: 2'
+          schema:
+            type: string
+      summary: Checks the cpu usage
+      tags:
+      - sd
+  /sd/disk:
+    get:
+      consumes:
+      - application/json
+      description: Checks the disk usage
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'OK - Free space: 17233MB (16GB) / 51200MB (50GB) | Used: 33%'
+          schema:
+            type: string
+      summary: Checks the disk usage
+      tags:
+      - sd
+  /sd/health:
+    get:
+      consumes:
+      - application/json
+      description: Shows OK as the ping-pong result
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Shows OK as the ping-pong result
+      tags:
+      - sd
+  /sd/ram:
+    get:
+      consumes:
+      - application/json
+      description: Checks the ram usage
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'OK - Free space: 402MB (0GB) / 8192MB (8GB) | Used: 4%'
+          schema:
+            type: string
+      summary: Checks the ram usage
+      tags:
+      - sd
+  /v1/user:
     get:
       consumes:
       - application/json
       description: List users
       parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: List users
         in: body
         name: user
@@ -125,6 +185,11 @@ paths:
       - application/json
       description: Add a new user
       parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Create a new user
         in: body
         name: user
@@ -142,12 +207,17 @@ paths:
       summary: Add new user to the database
       tags:
       - user
-  /user/{id}:
+  /v1/user/{id}:
     delete:
       consumes:
       - application/json
       description: Delete user by ID
       parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: The user's database id index num
         in: path
         name: id
@@ -168,6 +238,11 @@ paths:
       - application/json
       description: Update a user by ID
       parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: The user's database id index num
         in: path
         name: id
@@ -190,12 +265,17 @@ paths:
       summary: Update a user info by the user identifier
       tags:
       - user
-  /user/{username}:
+  /v1/user/{username}:
     get:
       consumes:
       - application/json
       description: Get an user by username
       parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Username
         in: path
         name: username

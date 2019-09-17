@@ -13,9 +13,10 @@ import (
 // @Tags user
 // @Accept  json
 // @Produce  json
+// @Param Authorization header string true "Token"
 // @Param username path string true "Username"
 // @Success 200 {object} model.UserModel "{"code":0,"message":"OK","data":{"username":"kong","password":"$2a$10$E0kwtmtLZbwW/bDQ8qI8e.eHPqhQOW9tvjwpyo/p05f/f4Qvr3OmS"}}"
-// @Router /user/{username} [get]
+// @Router /v1/user/{username} [get]
 func Get(c *gin.Context) {
 	username := c.Param("username")
 	// Get the user by the `username` from the database.

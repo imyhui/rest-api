@@ -20,11 +20,13 @@ fmt:
 	go vet . 2>&1 | grep -v vendor || true
 ca:
 	openssl req -new -nodes -x509 -out conf/server.crt -keyout conf/server.key -days 3650 -subj "/C=DE/ST=NRW/L=Earth/O=Random Company/OU=IT/CN=127.0.0.1/emailAddress=xxxxx@qq.com"
-
+doc:
+	swag init
 help:
 	@echo "make - compile the source code"
 	@echo "make clean - remove binary file and vim swp files"
 	@echo "make fmt - run go tool 'fmt' and 'vet'"
 	@echo "make ca - generate ca files"
+	@echo "make doc - generate doc files"
 
-.PHONY: clean fmt ca help
+.PHONY: clean fmt ca help doc
